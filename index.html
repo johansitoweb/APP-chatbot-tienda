@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="chatbotApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chatbot</title>
+  <!-- Ionic CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.min.css" rel="stylesheet">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .chat-container {
+      height: 400px;
+      overflow-y: scroll;
+      padding: 20px;
+      background-color: #f0f0f0;
+    }
+    .chat-message {
+      margin-bottom: 10px;
+    }
+    .chat-message.user {
+      text-align: right;
+    }
+    .chat-message.bot {
+      text-align: left;
+    }
+    ion-content {
+      --background: #f0f0f0;
+    }
+  </style>
+</head>
+<body ng-controller="chatbotController">
+  <ion-app>
+    <ion-content>
+      <div class="container my-5">
+        <h1 class="text-center mb-4 bg-secondary">Chatbot Tienda IA</h1>
+        <div class="chat-container" id="chat-container">
+          <div class="chat-message bot" ng-repeat="message in messages track by $index">
+            <strong>{{ message.sender }}:</strong> {{ message.text }}
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="Escribe tu mensaje..." ng-model="userMessage" id="chat-input">
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="button" ng-click="sendMessage()">Enviar</button>
+          </div>
+        </div>
+      </div>
+    </ion-content>
+  </ion-app>
+
+  <!-- Angular.js -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <!-- Ionic JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic.js"></script>
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    angular.module('chatbotApp', [])
+      .controller('chatbotController', function($scope, $timeout) {
+        $scope.messages = [];
+        $scope.userMessage = '';
+
+        $scope.sendMessage = function() {
+          if ($scope.userMessage.trim()) {
+            $scope.messages.push({ sender: 'Tú', text: $scope.userMessage });
+            $scope.botResponse($scope.userMessage);
+            $scope.userMessage = '';
+            scrollToBottom();
+          }
+        };
+
+        $scope.botResponse = function(message) {
+          // Agrega la lógica para generar la respuesta del bot
+          if (message.toLowerCase().includes('hola')) {
+            $scope.messages.push({ sender: 'Bot', text: '¡Hola! ¿En qué puedo ayudarte?' });
+          } else if (message.toLowerCase().includes('ropa')) {
+            $scope.messages.push({ sender: 'Bot', text: 'Tenemos una gran variedad de ropa de última moda. ¿Qué estás buscando?' });
+          } else if (message.toLowerCase().includes('precio')) {
+            $scope.messages.push({ sender: 'Bot', text: 'Nuestros precios varían dependiendo del tipo de prenda. Puedes consultar los precios en nuestra tienda o en nuestra página web.' });
+          } else if (message.toLowerCase().includes('ubicación')) {
+            $scope.messages.push({ sender: 'Bot', text: 'Nuestras tiendas están ubicadas en el centro de la ciudad, en la calle Principal número 123.' });
+          } else if (message.toLowerCase().includes('horario')) {
+            $scope.messages.push({ sender: 'Bot', text: 'Atendemos de lunes a sábado de 10:00 a 20:00 horas.' });
+          } else if (message.toLowerCase().includes('días')) {
+            $scope.messages.push({ sender: 'Bot', text: 'Estamos abiertos de lunes a sábado.' });
+          } else {
+            $scope.messages.push({ sender: 'Bot', text: 'Lo siento, no entiendo tu pregunta. ¿Puedes reformularla?' });
+          }
+        };
+
+        function scrollToBottom() {
+          var chatContainer = document.getElementById('chat-container');
+          $timeout(function() {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+          }, 100);
+        }
+      });
+  </script>
+</body>
+</html>
